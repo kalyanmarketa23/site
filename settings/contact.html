@@ -247,16 +247,15 @@
             <div class="page-content">
 
                 <div class="container-fluid">
-                        <div class="container-fluid">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-xl-12">
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-xl-12">
                         <div class="card">
-                            <div class="card-header">
-                                <h5>Contact Settings</h5>
-                            </div>
+                            
                             <div class="card-body">
+                                <h5>Contact Settings</h5>
                                 <form id="contact">
                                         <div class="form-group col-md-4">
                                             <label class="col-form-label"><strong>Mobile Number </strong></label>
@@ -290,12 +289,13 @@
                                                    placeholder="Enter Telegram"
                                                    name="telegram" id="telegram">
                                         </div>
-                                    </div>
+                                    
                                     <div class="form-group mt-4 ">
                                         <button type="submit" class="btn btn-primary waves-light m-t-10" id="submitBtn"
                                                 name="submitBtn">Submit
                                         </button>
                                     </div>
+                                </div>
                                     <div class="form-group">
                                         <div id="errormsg"></div>
                                     </div>
@@ -306,7 +306,86 @@
                 </div>
             </div>
         </div>
+        
     </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-xl-12">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-xl-12">
+                        <div class="card">
+                            
+                            <div class="card-body">
+                                <h5>Slider Images</h5>
+                                <div id="imageGallery"></div>
+
+                                <!-- Firebase Script -->
+                                <script type="module" src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
+                                <script type="module" src="https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js"></script>
+
+                                <!-- Your Firebase Config Script -->
+
+                                <!-- Main JavaScript -->
+                                <script type="module">
+                                    // Initialize Firebase
+                                    
+                                    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js';
+                                    import { getStorage, ref, listAll, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js';
+
+                                    const firebaseConfig = {
+                                        apiKey: "AIzaSyCl2IUOvRsFlwPsWDtQa_zxaEB_y1Qwp7w",
+                                        authDomain: "kalyan-market-b3b86.firebaseapp.com",
+                                        projectId: "kalyan-market-b3b86",
+                                        storageBucket: "kalyan-market-b3b86.appspot.com",
+                                        messagingSenderId: "442548039871",
+                                        appId: "1:442548039871:web:661a312d1b40b95162160a",
+                                        measurementId: "G-6EC9C7V43D"
+                                    };        
+
+                                    const app = initializeApp(firebaseConfig);
+                                    const storage = getStorage(app);
+
+                                    // Function to display uploaded images
+                                    function displayUploadedImages() {
+
+                                        const imageGallery = document.getElementById('imageGallery');
+
+                                        // List all files in storage
+                                        listAll(ref(storage, '/')).then((result) => {
+                                            result.items.forEach((itemRef) => {
+                                                // Get download URL for each file
+                                                getDownloadURL(itemRef).then((url) => {
+                                                    // Display image
+                                                    const imgElement = document.createElement('img');
+                                                    imgElement.src = url;
+                                                    imgElement.alt = itemRef.name; // Set alt attribute with file name
+                                                    imgElement.style.maxWidth = '200px';
+
+                                                    // Log any errors while loading the image
+                                                    imgElement.onerror = function () {
+                                                        console.error('Error loading image:', itemRef.name);
+                                                    };
+
+                                                    imageGallery.appendChild(imgElement);
+                                                });
+                                            });
+                                        }).catch((error) => {
+                                            console.error(error.message);
+                                        });
+
+                                    }
+                                    displayUploadedImages();
+                                    // Display initially uploaded images
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
 
                 </div>
                 <!-- container-fluid -->
