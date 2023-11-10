@@ -730,7 +730,27 @@
             </div>
         </div>
     </div>
+    <div class="card">
+        <div class="card-body">
+            <h5>Day Win List</h5>
 
+            <div class="table-responsive">
+                <table id="daywinlist" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Game Name</th>
+                        <th>Game Type</th>
+                        <th>(₹) Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <div class="col-12">
         <div class="card p-1">
             <div class="card-body">
@@ -1118,6 +1138,11 @@
                         bid=bid+points;
                     });
                 }
+
+                const tableBody = document.getElementById('daywinlist').getElementsByTagName('tbody')[0];
+                tableBody.innerHTML = ''; // Clear the table body before populating new data
+                let rowNumber = 1;
+
                 document.getElementById('total_bid_amt').innerText = bid;
                 const settingRef = collection(db, 'win_history_admin');
                 const qs = query(settingRef ,where('timestamp', '>=', startOfDay), where('timestamp', '<=', endOfDay));
@@ -1126,7 +1151,22 @@
                 var win = 0;
                 if (!querySnapshots.empty) {
                     querySnapshots.forEach(doc => {
-                        const points = doc.data().points;
+                        const data = doc.data();
+                        const { points ,game_name, type,username } = data;
+                        const newRow = tableBody.insertRow();
+                        
+                        const cellNumber = newRow.insertCell();
+                        const cellusername = newRow.insertCell();
+                        const cellgame = newRow.insertCell();
+                        const celltype = newRow.insertCell();
+                        const cellpoint = newRow.insertCell();
+                        
+                        cellNumber.textContent = rowNumber++;
+                        cellusername.textContent = username;
+                        cellgame.textContent = game_name;
+                        celltype.textContent = type;
+                        cellpoint.textContent = points;
+
                         win=win+points;
                     });
                 }
