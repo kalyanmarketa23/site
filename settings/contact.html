@@ -328,9 +328,8 @@
                                 <!-- Main JavaScript -->
                                 <script type="module">
                                     // Initialize Firebase
-                                    
                                     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js';
-                                    import { getStorage, ref, listAll, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js';
+                                    import { getStorage, ref, listAll, getDownloadURL, uploadBytes, deleteObject } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js';
 
                                     const firebaseConfig = {
                                         apiKey: "AIzaSyCl2IUOvRsFlwPsWDtQa_zxaEB_y1Qwp7w",
@@ -340,15 +339,16 @@
                                         messagingSenderId: "442548039871",
                                         appId: "1:442548039871:web:661a312d1b40b95162160a",
                                         measurementId: "G-6EC9C7V43D"
-                                    };        
+                                    };
+                                    
 
                                     const app = initializeApp(firebaseConfig);
                                     const storage = getStorage(app);
 
                                     // Function to display uploaded images
                                     function displayUploadedImages() {
-
                                         const imageGallery = document.getElementById('imageGallery');
+                                        imageGallery.innerHTML = ''; // Clear the existing images
 
                                         // List all files in storage
                                         listAll(ref(storage, '/')).then((result) => {
@@ -366,17 +366,54 @@
                                                         console.error('Error loading image:', itemRef.name);
                                                     };
 
+                                                    // Display a delete button for each image
+                                                    const deleteButton = document.createElement('button');
+                                                    deleteButton.textContent = 'Delete';
+                                                    deleteButton.addEventListener('click', () => deleteImage(itemRef));
+                                                    
+                                                    // Append image and delete button to the gallery
                                                     imageGallery.appendChild(imgElement);
+                                                    imageGallery.appendChild(deleteButton);
                                                 });
                                             });
                                         }).catch((error) => {
                                             console.error(error.message);
                                         });
-
                                     }
-                                    displayUploadedImages();
+
+                                    // Function to delete an image
+                                    function deleteImage(itemRef) {
+                                        deleteObject(itemRef).then(() => {
+                                            console.log('Image deleted successfully');
+                                            displayUploadedImages(); // Refresh the gallery after deletion
+                                        }).catch((error) => {
+                                            console.error('Error deleting image:', error.message);
+                                        });
+                                    }
+
+                                    // Function to handle image upload
+                                    document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+
+                                    function handleFileUpload(event) {
+                                        const file = event.target.files[0];
+                                        const storageRef = ref(storage, '/' + file.name);
+
+                                        uploadBytes(storageRef, file).then(() => {
+                                            console.log('File uploaded successfully');
+                                            displayUploadedImages(); // Refresh the gallery after upload
+                                        }).catch((error) => {
+                                            console.error('Error uploading file:', error.message);
+                                        });
+                                    }
+
                                     // Display initially uploaded images
+                                    displayUploadedImages();
                                 </script>
+
+                                <!-- Image upload form -->
+                                <form>
+                                    <input type="file" id="fileInput" accept="image/*">
+                                </form>
                             </div>
                         </div>
                     </div>
