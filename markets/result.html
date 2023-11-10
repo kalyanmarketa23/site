@@ -1022,12 +1022,15 @@
                     num = doc.data().gameNumber;
                 });
                 
-                const today = new Date();
-                const day = today.getDate();
-                const month = today.getMonth() + 1; // Month is zero-based, so add 1
-                const year = today.getFullYear();
-                const date = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
-                const startOfDay = new Date(date);
+                let currentDate = new Date();
+                if (currentDate.getHours() < 1) {
+                    currentDate.setDate(currentDate.getDate() - 1);
+                }
+
+                // Format the date as YYYY-MM-DD
+                let formattedDate = currentDate.toISOString().split('T')[0];
+
+                const startOfDay = new Date(formattedDate);
                 startOfDay.setHours(0, 0, 0, 0);
 
                 if(session == "open")
