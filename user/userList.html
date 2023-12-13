@@ -106,7 +106,7 @@
   storageBucket: "kalyan-market-b3b86.appspot.com",
   messagingSenderId: "442548039871",
   appId: "1:442548039871:web:661a312d1b40b95162160a",
-  measurementId: "G-6EC9C7V43D"
+  measurementId: "G-6EC9C7V43D" 
                         };
                       
                         // Initialize Firebase
@@ -292,8 +292,14 @@
                 <h4 class="card-title d-flex align-items-center justify-content-between">&nbsp; <a
                             href="https://kalyanmarketa23.github.io/site/user/unapproved" class="btn btn-primary waves-effect waves-light btn-sm">Un-approved
                         Users List</a></h4>
+
+                        <div class="mb-3">
+                            <label for="searchInput" class="form-label">Search:</label>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Enter username">
+                        </div>
+
                 <div class="table-responsive">
-                    <table id="userList" class="table table-bordered">
+                    <table id="userLists" class="table table-bordered">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -421,7 +427,7 @@
 </script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
-    import {  getFirestore, collection,doc, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js';
+    import {  getFirestore, collection,doc, query,orderBy, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js';
 
     // 
 // Function to fetch data from Firestore and populate the form fields
@@ -440,9 +446,9 @@
 
         try {
                 const settingsRef = collection(db, 'users');
-                const q = query(settingsRef, where('approved', '==', true));
+                const q = query(settingsRef, where('approved', '==', true),orderBy("createdTimestamp","desc"));
                 const querySnapshot = await getDocs(q);
-                const tableBody = document.getElementById('userList').getElementsByTagName('tbody')[0];
+                const tableBody = document.getElementById('userLists').getElementsByTagName('tbody')[0];
                 tableBody.innerHTML = ''; // Clear the table body before populating new data
         
                 let rowNumber = 1;
@@ -490,7 +496,23 @@
     populateFormFields();   
 
 </script>
-
+<script>
+    document.getElementById("searchInput").addEventListener("input", function () {
+        const searchTerm = this.value.toLowerCase();
+        const tableRows = document.getElementById('userLists').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    
+        for (let i = 0; i < tableRows.length; i++) {
+            const username = tableRows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+    
+            if (username.includes(searchTerm)) {
+                tableRows[i].style.display = "";
+            } else {
+                tableRows[i].style.display = "none";
+            }
+        }
+    });
+    
+</script>
     <script src="https://kalyanmarketa23.github.io/site/assets/js/pages/datatables.init.js"></script>
     <script src="https://kalyanmarketa23.github.io/site/assets/libs/datatables/datatables.min.js"></script>
     <script src="https://kalyanmarketa23.github.io/site/assets/js/pages/dashboard.init.js"></script>

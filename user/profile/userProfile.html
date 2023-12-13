@@ -443,6 +443,7 @@
                                     <th>Game Type</th>
                                     <th>Session</th>
                                     <th>Points</th>
+                                    <th>Bid Digit</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -904,7 +905,7 @@
                     if (!querySnapshotr.empty) {
                     querySnapshotr.forEach(doc => {
                         const data = doc.data();
-                        const { game_name,timestamp, points,oc , type } = data;
+                        const { game_name,timestamp, points,number,oc , type } = data;
                         const newRow = tableBodyr.insertRow();
                         
                         const cellNumber = newRow.insertCell();
@@ -913,12 +914,14 @@
                         const celltype = newRow.insertCell();
                         const cellsession = newRow.insertCell();
                         const cellpoint = newRow.insertCell();
+                        const cellnum = newRow.insertCell();
                         cellNumber.textContent = rowNumberr++;
                         celldate.textContent = timestamp.toDate().toDateString().substring(0,11);
                         cellgame.textContent = game_name;
                         celltype.textContent = type;
                         cellsession.textContent = oc;
                         cellpoint.textContent = points;
+                        cellnum.textContent = number;
                         
                 });
             }
@@ -960,7 +963,7 @@
             atableBody.innerHTML = ''; // Clear the table body before populating new data
     
             let arowNumber = 1;
-            if (!aquerySnapshot.empty) {
+            if (!aquerySnapshot.empty) { 
                 aquerySnapshot.forEach(doc => {
                     const data = doc.data();
                     const {  createdTimestamp, points,state } = data;

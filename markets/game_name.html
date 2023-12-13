@@ -101,7 +101,7 @@
                     <script type="module">
                         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
                         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js";
-                      
+                       
                         // Firebase configuration
                         const firebaseConfig = {
                             apiKey: "AIzaSyCl2IUOvRsFlwPsWDtQa_zxaEB_y1Qwp7w",
@@ -299,7 +299,11 @@
                             data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                             class="btn btn-primary waves-effect font-size-14 waves-light btn-sm">Add New Game</a></h4>
                 <div class="table-responsive">
-                    <table id="gameNameList" class="table table-bordered">
+                    <div class="mb-3">
+                        <label for="searchInput" class="form-label">Search:</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Enter gamename">
+                    </div>
+                    <table id="gameameList" class="table table-bordered">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -312,6 +316,9 @@
 
                         </tr>
                         </thead>
+                        <tbody>
+                            
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -555,7 +562,7 @@
                 const q = query(settingsRef, where('exists', '==', true));
                 const querySnapshot = await getDocs(q);
                 
-                const tableBody = document.getElementById('gameNameList').getElementsByTagName('tbody')[0];
+                const tableBody = document.getElementById('gameameList').getElementsByTagName('tbody')[0];
                 tableBody.innerHTML = ''; // Clear the table body before populating new data
         
                 let rowNumber = 1;
@@ -666,7 +673,23 @@
     populateFormFields();   
 
 </script>
-
+<script>
+    document.getElementById("searchInput").addEventListener("input", function () {
+        const searchTerm = this.value.toLowerCase();
+        const tableRows = document.getElementById('gameameList').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    
+        for (let i = 0; i < tableRows.length; i++) {
+            const username = tableRows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+    
+            if (username.includes(searchTerm)) {
+                tableRows[i].style.display = "";
+            } else {
+                tableRows[i].style.display = "none";
+            }
+        }
+    });
+    
+</script>
 
     <script src="https://kalyanmarketa23.github.io/site/assets/js/pages/datatables.init.js"></script>
     <script src="https://kalyanmarketa23.github.io/site/assets/libs/datatables/datatables.min.js"></script>
